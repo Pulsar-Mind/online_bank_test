@@ -1,0 +1,45 @@
+{% include "accounts/base.html" %}
+
+<head>
+<meta charset="utf-8"/>
+<meta name='viewport' content='width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=no'/>
+<title>Kontodetails</title>
+</head>
+
+<style> 
+body {
+  background-color: white;
+  background-image: none;
+}
+</style>
+
+<!-- WENN USER AUF DEN LINKI KLICKT auf neue seite verweisen -->
+<body> 
+    <h1>Zeitbank</h1>
+    <h2>The details of your {{account.account_type}}: </h2>
+
+    <b>Benutzer: </b> {{account.user}} <br/>
+    <b>Kontoart: </b> {{account.account_type}} <br/> 
+    <b>IBAN: </b> {{account.iban}} <br/>
+    <b>Balance: </b> {{account.balance}} <br/>
+
+    <h2>Past Transactions for this account:</h2>
+    {% for trans in acc_trans %}
+    <b>Date: </b> {{trans.date}} <br/>
+    <b>Receiver: </b> {{trans.rec_account.account_type}}
+    <a href="/accounts/{{trans.rec_account.iban}}">({{ trans.rec_account.iban }}) </a> <br/>
+    <b>Sender: </b> {{trans.sen_account.account_type}} ({{ trans.sen_account.iban }}) <br/>
+    <b>Transferred amount: </b> {{trans.amount}} <br/>
+    <b>Message: </b> {{trans.message}} <br/> <br/>
+
+
+    {%endfor%}
+
+<!-- erstelle einen zweiten for loop und liste alle ausgehenden zahlungen auf  -->
+</body> 
+
+<script>
+	
+
+</script>
+        

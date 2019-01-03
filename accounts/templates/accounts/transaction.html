@@ -1,0 +1,16 @@
+{% include "accounts/base.html" %}
+
+<h1>Hallo {{user}} </h1>
+<form method="POST">
+    {% csrf_token %}
+    {{trans_form.as_p}}    <!-- trans_form = Variablenbezeichnung in views.py -->
+    <input type="submit" value="Submit Transaction">
+
+</form>
+
+
+
+
+
+
+

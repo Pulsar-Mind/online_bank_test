@@ -1,0 +1,104 @@
+<style type="text/css">
+body{
+   margin:auto;
+  
+   text-align:center;
+}
+.navbar {
+  overflow: hidden;
+  background-color: #333;
+  font-family: Arial;
+}
+
+/* Links inside the navbar */
+.navbar a {
+  float: left;
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* The dropdown container */
+.dropdown {
+  float: right;
+  overflow: hidden;
+}
+
+/* Dropdown button */
+.dropdown .dropbtn {
+  font-size: 16px;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 14px 16px;
+  background-color: inherit;
+  font-family: inherit; /* Important for vertical align on mobile phones */
+  margin: 0; /* Important for vertical align on mobile phones */
+}
+
+/* Add a red background color to navbar links on hover */
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: rgb(50, 205, 171);
+}
+
+/* Dropdown content (hidden by default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  float: none;
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+/* Add a grey background color to dropdown links on hover */
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+body {
+    /*background-color: lightblue;*/
+    background-image: url("https://www.deine-tierwelt.de/magazin/wp-content/uploads/sites/2/2017/11/Wellensittiche.jpg");
+    }  
+
+</style>
+
+<!-- WENN USER AUF DEN LINKI KLICKT auf neue seite verweisen -->
+<body> 
+<div class="navbar">
+        <a href="/">Home</a>
+        <a href="#news">News</a>
+        <div class="dropdown">
+            <button class="dropbtn">Dropdown<i class="fa fa-caret-down"></i></button>
+            <div class="dropdown-content">
+                <a href="/accounts/profile/">Profile</a>
+                <a href="/transaction">Transaction</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </div> 
+</body>
+
+
+{% block content %}
+
+
+
+
+{% endblock %}
