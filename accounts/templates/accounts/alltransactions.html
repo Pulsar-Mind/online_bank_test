@@ -1,1 +1,62 @@
-{% include "accounts/base.html" %}<!-- 2 for loops in denen die beiden übergebenen context varriablen (in diesem fall 2 query sets) durchlaufen werden und attribute von den objecten darin wiedergegeben werden. --><body>    <h1>All Transactions for your accounts:</h1>    {% for trans_all in acc_trans %}        <b>Date: </b> {{trans.date}} <br/>        <b>Receiver: </b> {{trans_all.rec_account.account_type}}        <a href="/accounts/{{trans.rec_account.iban}}">({{trans_all.rec_account.iban}}) </a> <br/>        <b>Sender: </b> {{trans_all.sen_account.account_type}} ({{trans_all.sen_account.iban}}) <br/>        <b>Transferred amount: </b> {{trans_all.amount}} <br/>        <b>Message: </b> {{trans_all.message}} <br/> <br/>    {%endfor%}<br><br><br><br><br><br><br>    <!-- Das gleiche noch einmal aber diesesmal mit acc_trans2 (erhaltene zahlungen)    Hausaufgabe fur hier: erstelle eine einfache tabelle um die attribute in einer zeile hintereinander auszugeben.    hilfe : https://www.w3schools.com/html/html_tables.asp    <table>        <tr>            <th>datum</th>            <th>Iban</th>            ...          </tr>    {% forloop %}     <tr>        <td>{{trans.attr}}</td>        ....        </tr>     {% endfor %}    </table>   Alle auflistungen von transaktionen  sollen dieses format haben, ubernimm es auch fur andere templates (myaccount)    -->{% for trans_all in acc_trans2 %}        <b>Date: </b> {{trans.date}} <br/>        <b>Receiver: </b> {{trans_all.rec_account.account_type}}        <a href="/accounts/{{trans.rec_account.iban}}">({{trans_all.rec_account.iban}}) </a> <br/>        <b>Sender: </b> {{trans_all.sen_account.account_type}} ({{trans_all.sen_account.iban}}) <br/>        <b>Transferred amount: </b> {{trans_all.amount}} <br/>        <b>Message: </b> {{trans_all.message}} <br/> <br/>    {%endfor%}</body>
+{% include "accounts/base.html" %}
+
+<style>
+.odd{background-color: white}
+.even{background-color: lightgray}
+th{border: 1px solid black}
+td{border-bottom: 1px solid black}
+</style>
+
+
+<!-- 2 for loops in denen die beiden übergebenen context varriablen (in diesem fall 2 query sets) durchlaufen werden
+ und attribute von den objecten darin wiedergegeben werden. -->
+<body>
+    <h1>All Transactions you made from all your accounts:</h1>
+    {% for trans_all in acc_sender %}
+        <b>Date: </b> {{trans_all.date}} <br/>
+        <b>Receiver: </b> {{trans_all.rec_account.account_type}}
+        <a href="/accounts/{{trans.rec_account.iban}}">({{trans_all.rec_account.iban}}) </a> <br/>
+        <b>Sender: </b> {{trans_all.sen_account.account_type}} ({{trans_all.sen_account.iban}}) <br/>
+        <b>Transferred amount: </b> {{trans_all.amount}} <br/>
+        <b>Message: </b> {{trans_all.message}} <br/> <br/>
+    {%endfor%}
+
+<br>
+<br>
+
+    <!-- Das gleiche noch einmal aber diesesmal mit acc_trans2 (erhaltene zahlungen)
+
+    Hausaufgabe fur hier: erstelle eine einfache tabelle um die attribute in einer zeile hintereinander auszugeben.
+
+    hilfe : https://www.w3schools.com/html/html_tables.asp
+    -->
+    <h2>Transactions you received on all accounts</h2>
+    <table>
+        <tr class="odd"> 
+            <th>Datum</th>
+            <th>Your account</th>
+            <th>From Iban</th>
+            <th>Amount</th>
+          </tr>
+    {%for trans_all in acc_receiver%}
+     <tr class="{% cycle 'even' 'odd' %}">
+        <td>{{trans_all.date}}</td>
+        <td>{{trans_all.rec_account.iban}}</td>
+        <td>{{trans_all.sen_account.iban}}</td>
+        <td>{{trans_all.amount|floatformat:2}}€</td>
+        </tr>
+     {%endfor%}
+    </table>
+<br>
+<br>
+
+Alle auflistungen von transaktionen  sollen dieses format haben, ubernimm es auch fur andere templates (myaccount)
+{% for trans_all in acc_trans2 %}
+        <b>Date: </b> {{trans.date}} <br/>
+        <b>Receiver: </b> {{trans_all.rec_account.account_type}}
+        <a href="/accounts/{{trans.rec_account.iban}}">({{trans_all.rec_account.iban}}) </a> <br/>
+        <b>Sender: </b> {{trans_all.sen_account.account_type}} ({{trans_all.sen_account.iban}}) <br/>
+        <b>Transferred amount: </b> {{trans_all.amount}} <br/>
+        <b>Message: </b> {{trans_all.message}} <br/> <br/>
+    {%endfor%}
+</body>

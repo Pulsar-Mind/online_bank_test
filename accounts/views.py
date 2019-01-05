@@ -24,13 +24,16 @@ def myaccount(request, iban):
     account = BankAccount.objects.filter(
         iban=iban).first()  # SQL Abfrage - Vergleich Variable mit Klassenattribut, first fuer Objekt aus Query Set = Array
     acc_trans = TransactionModel.objects.filter(sen_account=account)
+    received_transaction = TransactionModel.objects.filter(rec_account=account)
     user = request.user
-    if account and user == account.user:
-        return render(request, 'accounts/myaccount.html', {"account": account, "acc_trans": acc_trans})
+    if account:
+        if user == account.user:
+            return render(request, 'accounts/myaccount.html', {"account": account, "acc_trans": acc_trans, 
+            "received_transaction": received_transaction})
+        else:
+            return HttpResponse("You have no authority for this account")
     else:
-        return HttpResponse("You have no authority for this account")
-    #return HttpResponse("Die eingegebene Iban: " + iban + " ist nicht korrekt. Gebe die Iban erneut ein")
-
+        return HttpResponse("The requested account doesn't exist")
 
 @login_required
 def transaction(request):
@@ -73,10 +76,10 @@ def alltransactions(request):
     Somit erhalten wir alle transaktionen die vom user gesendet wurden (egal von welchem BankAccount)
 
     '''
-    acc_trans = TransactionModel.objects.filter(sen_account__user=request.user)
-    acc_trans2 = TransactionModel.objects.filter(rec_account__user=request.user)
+    acc_sender = TransactionModel.objects.filter(sen_account__user=request.user) #request.user = derzeitiger user
+    acc_receiver = TransactionModel.objects.filter(rec_account__user=request.user)
     # die beiden variablen (acc_trans,acc_trans2) werden als context ans HTML ubergeben
-    return render(request, 'accounts/alltransactions.html', {"acc_trans":acc_trans, "acc_trans2":acc_trans2})
+    return render(request, 'accounts/alltransactions.html', {"acc_sender":acc_sender, "acc_receiver":acc_receiver})
 
 
 def checkiban(request, iban):
