@@ -1,17 +1,26 @@
 {% include "accounts/base.html" %}
 
 <style>
-.odd{background-color: white}
-.even{background-color: lightgray}
-th{border: 1px solid black}
-td{border-bottom: 1px solid black}
+#table_transferred, #table_received{
+    display: none
+}
+
+#btn_received, #btn_transferred{
+    padding: 5px;
+    background: lightgrey;
+    font-size: 18px;
+}
+
+#btn_received, #btn_transferred:hover{
+    cursor: pointer;
+}
 </style>
 
 
-<!-- 2 for loops in denen die beiden übergebenen context varriablen (in diesem fall 2 query sets) durchlaufen werden
- und attribute von den objecten darin wiedergegeben werden. -->
-<body>
-    <h1>All Transactions you made from all your accounts:</h1>
+<!-- loops in denen die beiden übergebenen context varriablen (in diesem fall 2 query sets) durchlaufen
+    werden und attribute von den objecten darin wiedergegeben werden. 
+
+<h1>All Transactions you made from all your accounts:</h1>
     {% for trans_all in acc_sender %}
         <b>Date: </b> {{trans_all.date}} <br/>
         <b>Receiver: </b> {{trans_all.rec_account.account_type}}
@@ -19,44 +28,55 @@ td{border-bottom: 1px solid black}
         <b>Sender: </b> {{trans_all.sen_account.account_type}} ({{trans_all.sen_account.iban}}) <br/>
         <b>Transferred amount: </b> {{trans_all.amount}} <br/>
         <b>Message: </b> {{trans_all.message}} <br/> <br/>
-    {%endfor%}
+    {%endfor%} 
+-->
 
+<!-- erstelle eine einfache tabelle um die attribute in einer zeile hintereinander auszugeben.
+     hilfe : https://www.w3schools.com/html/html_tables.asp -->
+
+<body>
+    <h2>Press on one of the buttons below and choose the option:</h2><br>
+    <span id="btn_received">Received transactions</span> <br><br><br>
+    <span id="btn_transferred">Transferred transactions</span>
 <br>
 <br>
-
-    <!-- Das gleiche noch einmal aber diesesmal mit acc_trans2 (erhaltene zahlungen)
-
-    Hausaufgabe fur hier: erstelle eine einfache tabelle um die attribute in einer zeile hintereinander auszugeben.
-
-    hilfe : https://www.w3schools.com/html/html_tables.asp
-    -->
-    <h2>Transactions you received on all accounts</h2>
-    <table>
-        <tr class="odd"> 
-            <th>Datum</th>
-            <th>Your account</th>
-            <th>From Iban</th>
-            <th>Amount</th>
-          </tr>
-    {%for trans_all in acc_receiver%}
-     <tr class="{% cycle 'even' 'odd' %}">
-        <td>{{trans_all.date}}</td>
-        <td>{{trans_all.rec_account.iban}}</td>
-        <td>{{trans_all.sen_account.iban}}</td>
-        <td>{{trans_all.amount|floatformat:2}}€</td>
-        </tr>
-     {%endfor%}
-    </table>
-<br>
-<br>
-
-Alle auflistungen von transaktionen  sollen dieses format haben, ubernimm es auch fur andere templates (myaccount)
-{% for trans_all in acc_trans2 %}
-        <b>Date: </b> {{trans.date}} <br/>
-        <b>Receiver: </b> {{trans_all.rec_account.account_type}}
-        <a href="/accounts/{{trans.rec_account.iban}}">({{trans_all.rec_account.iban}}) </a> <br/>
-        <b>Sender: </b> {{trans_all.sen_account.account_type}} ({{trans_all.sen_account.iban}}) <br/>
-        <b>Transferred amount: </b> {{trans_all.amount}} <br/>
-        <b>Message: </b> {{trans_all.message}} <br/> <br/>
-    {%endfor%}
+    {% include "accounts/transfer_table.html" %}     
+    {% include "accounts/receiving_table.html" %}
 </body>
+
+<!-- JavaScript -->
+<script>
+    var button1 = document.getElementById("btn_received")
+    var button2 = document.getElementById("btn_transferred")
+    var table_received = document.getElementById("table_received")
+    var table_transferred = document.getElementById("table_transferred")
+
+    button1.onclick = function() {
+        button1.style.border = "3px solid black"
+        button1.style.backgroundColor = "yellowgreen"
+        button2.style.border = "initial"
+        button2.style.backgroundColor = "lightgrey" 
+        table_received.style.display = "block"      //show table
+        table_transferred.style.display = "none"    //call css
+    }
+    button2.onclick = function() {
+        //alert(table_transferred)
+        button2.style.border = "3px solid black"
+        button2.style.backgroundColor = "yellowgreen" 
+        button1.style.border = "initial"
+        button1.style.backgroundColor = "lightgrey"
+        table_received.style.display = "none"
+        table_transferred.style.display = "block"
+    }
+
+
+
+
+
+
+
+
+
+
+
+</script>

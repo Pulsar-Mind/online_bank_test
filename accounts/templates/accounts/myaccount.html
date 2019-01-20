@@ -15,16 +15,19 @@ body {
 
 <!-- WENN USER AUF DEN LINKI KLICKT auf neue seite verweisen -->
 <body> 
-    <h1>Zeitbank</h1>
-    <h2>The details of your {{account.account_type}}: </h2>
+  <h1>Zeitbank</h1>
+  <h2>The details of your {{account.account_type}}: </h2>
 
-    <b>Benutzer: </b> {{account.user}} <br>
-    <b>Kontoart: </b> {{account.account_type}} <br> 
-    <b>IBAN: </b> {{account.iban}} <br>
-    <b>Balance: </b> {{account.balance}} <br>
+  <b>Benutzer: </b> {{account.user}} <br>
+  <b>Kontoart: </b> {{account.account_type}} <br> 
+  <b>IBAN: </b> {{account.iban}} <br>
+  <b>Balance: </b> {{account.balance|floatformat:2}}€ <br>
 
-    <h2>Transactions you made to another account:</h2>
-    {% for trans in acc_trans %}
+  {% include "accounts/transfer_table.html" %}     
+  {% include "accounts/receiving_table.html" %}
+<br>
+<br>
+    <!-- {% for trans in acc_trans %}
     <b>Date: </b> {{trans.date}} <br>
     <b>Receiver: </b> {{trans.rec_account.account_type}}
     <a href="/accounts/{{trans.rec_account.iban}}">({{ trans.rec_account.iban }}) </a> <br>
@@ -32,14 +35,7 @@ body {
     <b>Transferred amount: </b> {{trans.amount}} <br>
     <b>Message: </b> {{trans.message}} <br> <br>
 
-    {%endfor%}
-<br>
-<br>
-    <h2>Transactions you received from another account</h2>
-    {%for trans in received_transaction%}
-    <b>Date: </b> {{trans.date}} <br>
-
-    {%endfor%}
+    {%endfor%} -->
 
 <!-- erstelle einen zweiten for loop und liste alle ausgehenden zahlungen auf  -->
 </body> 

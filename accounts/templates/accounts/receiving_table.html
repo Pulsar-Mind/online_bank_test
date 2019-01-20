@@ -1,0 +1,25 @@
+<!-- css style is in base.html -->
+
+<!-- html base for table -->        
+<div id="table_received">
+    <h2>Transactions you received on all accounts</h2>
+    <table style="margin: 0px auto">
+            <tr class="odd"> 
+            <th>Datum</th>
+            <th>Your account</th>
+            <th>From Iban</th>
+            <th>Amount</th>
+            </tr>
+    {%for trans_all in acc_receiver%}
+        <tr class="{% cycle 'even' 'odd' %}">
+        <td>{{trans_all.date}}</td>
+        <td> 
+            <a href="/accounts/{{trans_all.rec_account.iban}}">{{trans_all.rec_account.iban}}</a>
+        </td>
+        <td>{{trans_all.sen_account.iban}}</td>
+        <td>+ {{trans_all.amount|floatformat:2}}€</td>
+        </tr>
+        {%endfor%}
+    </table>
+</div>
+    

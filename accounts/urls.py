@@ -11,6 +11,9 @@ urlpatterns = [
     path('accounts/<iban>', views.myaccount),
     path('transaction', views.transaction),
     path('alltransactions', views.alltransactions),
+    path('iban_api_sender/<iban>', views.checkiban_sender_api),
+    path('iban_api_receiver/<iban>', views.checkiban_receiver_api),
+    path('amount_api/<iban>/<amount>', views.checkamount_sender_api),
 
 ]
 

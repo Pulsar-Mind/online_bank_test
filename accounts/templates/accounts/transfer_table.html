@@ -1,0 +1,24 @@
+<!-- css style is in base.html -->
+
+<!-- html base for table -->
+<div id="table_transferred">
+    <h2>Transactions you made to other accounts</h2>
+    <table style="margin: 0px auto">
+        <tr class="odd"> 
+            <th>Datum</th>
+            <th>From account</th>
+            <th>To Iban</th>
+            <th>Amount</th>
+        </tr>
+    {%for trans_all in acc_sender%}
+    <tr class="{% cycle 'even' 'odd' %}">
+        <td>{{trans_all.date}}</td>
+        <td>
+                <a href="/accounts/{{trans_all.sen_account.iban}}">{{trans_all.sen_account.iban}}</a>
+        </td>
+        <td>{{trans_all.rec_account.iban}}</td>
+        <td>- {{trans_all.amount|floatformat:2}}€</td>
+        </tr>
+    {%endfor%}
+    </table>
+</div>

@@ -77,12 +77,22 @@ body {
     background-image: url("https://www.deine-tierwelt.de/magazin/wp-content/uploads/sites/2/2017/11/Wellensittiche.jpg");
     }  
 
+/* css style for table */
+    .odd{background-color: white}
+    .even{background-color: lightgray}
+    th{border: 1px solid black}
+    td{border-bottom: 1px solid black}
 </style>
+
 
 <!-- WENN USER AUF DEN LINKI KLICKT auf neue seite verweisen -->
 <body> 
 <div class="navbar">
-        <a href="/">Home</a>
+  {%if user.is_authenticated%}
+        <a href="/accounts/profile/">Home</a>
+  {% else %}
+    <a href="/">Home</a>
+  {% endif %}
         <a href="#news">News</a>
         <div class="dropdown">
             <button class="dropbtn">Dropdown<i class="fa fa-caret-down"></i></button>

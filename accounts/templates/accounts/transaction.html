@@ -1,12 +1,114 @@
 {% include "accounts/base.html" %}
 
 <h1>Hallo {{user}} </h1>
-<form method="POST">
+<form method="POST" id="transcation_form">
     {% csrf_token %}
     {{trans_form.as_p}}    <!-- trans_form = Variablenbezeichnung in views.py -->
-    <input type="submit" value="Submit Transaction">
-
+    <input type="submit" value="Submit Transaction" id="submit_button" disabled> <!-- button disabled -->
 </form>
+
+<script>
+    var iban_field_sender = document.getElementById("id_sen_account")
+    var iban_field_receiver = document.getElementById("id_rec_account")
+    var transfer_sender_amount = document.getElementById("id_amount")
+    var submit_button = document.getElementById("submit_button")
+
+    document.getElementById("transcation_form").reset(); //reset form after reload of the page
+
+    var test = false
+    var test1 = false
+    var test2 = false
+
+    function check_valid(){
+       // console.log(test , test1,test2)
+        if (test && test1 && test2){
+            console.log(test, test1,test2)
+            submit_button.disabled = false;
+        } else {
+            submit_button.disabled = true;
+        }
+    }
+
+    
+    iban_field_sender.onblur = function(){     //onblur = event triggered when user steps out of the input field
+        //console.log(iban_field.value)   //print statement by JS, print input in our console
+        var url = "/iban_api_sender/"+iban_field_sender.value
+        var xhttp = new XMLHttpRequest();   //XMLHttpRequest Klasse von JS
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+                var test_boolean = JSON.parse(xhttp.responseText)
+                if (test_boolean.answer != true) {
+                    alert(iban_field_sender.value + " is not your account")  
+                }
+                if (test_boolean.answer == true){
+                    test = true
+                    check_valid()
+                } else {
+                    test = false
+                    check_valid()
+                }
+                //console.log(test_boolean.answer)
+            }
+        }
+        xhttp.open("GET", url, true);       //goes to urls.py --> views.py
+        xhttp.send();
+    }
+
+    //function to check if iban of the receiver is correct
+    iban_field_receiver.onblur = function() {
+        var url = "/iban_api_receiver/"+iban_field_receiver.value
+        var xhttp = new XMLHttpRequest();   //XMLHttpRequest Klasse von JS
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+                var test_boolean = JSON.parse(xhttp.responseText)
+                if (test_boolean.answer != true) {
+                    alert(iban_field_receiver.value + " does not exist!")
+                }
+                if (test_boolean.answer == true){
+                    test1 = true
+                    check_valid()
+                } else {
+                    test1 = false
+                    check_valid()
+                }
+                //console.log(test_boolean.answer)
+            }
+        }
+        xhttp.open("GET", url, true);       //goes to urls.py --> views.py
+        xhttp.send();
+    }
+
+    //function to check if there is enough money on the senders account
+    transfer_sender_amount.onblur = function() {
+        var url = "/amount_api/"+iban_field_sender.value+"/"+transfer_sender_amount.value
+        var xhttp = new XMLHttpRequest();   //XMLHttpRequest Klasse von JS, go to xhttp.open
+        xhttp.onreadystatechange = function() {
+            console.log(xhttp.status)
+          if (this.readyState == 4 && this.status == 200) { 
+                var test_boolean = JSON.parse(xhttp.responseText)
+                console.log(test_boolean.answer)
+
+                if (test_boolean.answer != true) {
+                    alert("Your account is not gedeckt!")
+                }
+                if (test_boolean.answer == true){
+                    test2 = true
+                    check_valid()
+                } else {
+                    test2 = false
+                    check_valid()
+                }
+            }else{
+                console.log(xhttp.responseText)
+               // alert("The input is not valid")
+            }
+        }
+        xhttp.open("GET", url, true);       //goes to urls.py --> views.py
+        xhttp.send();
+    }
+    
+
+</script>
 
 
 

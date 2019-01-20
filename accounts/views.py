@@ -3,10 +3,9 @@ from django.http import HttpResponse  # Statustext
 from .models import BankAccount, TransactionModel
 from .forms import TransactionForm
 from django.contrib.auth.decorators import login_required
+import json         #Java Script oriented notation
 
 
-
-# Create your views here.
 
 def hello(request):
     return render(request, 'accounts/landingpage.html')  #
@@ -23,13 +22,17 @@ def myprofile(request):
 def myaccount(request, iban):
     account = BankAccount.objects.filter(
         iban=iban).first()  # SQL Abfrage - Vergleich Variable mit Klassenattribut, first fuer Objekt aus Query Set = Array
-    acc_trans = TransactionModel.objects.filter(sen_account=account)
-    received_transaction = TransactionModel.objects.filter(rec_account=account)
+    acc_sender = TransactionModel.objects.filter(sen_account=account)
+    acc_receiver = TransactionModel.objects.filter(rec_account=account)
+    context = {
+        "account": account, 
+        "acc_sender": acc_sender, 
+        "acc_receiver": acc_receiver,
+    }
     user = request.user
     if account:
         if user == account.user:
-            return render(request, 'accounts/myaccount.html', {"account": account, "acc_trans": acc_trans, 
-            "received_transaction": received_transaction})
+            return render(request, 'accounts/myaccount.html', context)
         else:
             return HttpResponse("You have no authority for this account")
     else:
@@ -78,8 +81,12 @@ def alltransactions(request):
     '''
     acc_sender = TransactionModel.objects.filter(sen_account__user=request.user) #request.user = derzeitiger user
     acc_receiver = TransactionModel.objects.filter(rec_account__user=request.user)
+    context = {
+        "acc_sender":acc_sender, 
+        "acc_receiver":acc_receiver
+    }
     # die beiden variablen (acc_trans,acc_trans2) werden als context ans HTML ubergeben
-    return render(request, 'accounts/alltransactions.html', {"acc_sender":acc_sender, "acc_receiver":acc_receiver})
+    return render(request, 'accounts/alltransactions.html', context)
 
 
 def checkiban(request, iban):
@@ -88,3 +95,41 @@ def checkiban(request, iban):
     if account:
         return HttpResponse("Die Iban: " + iban + " ist korrekt")
     return HttpResponse("Die eingegebene Iban: " + iban + " ist nicht korrekt. Gebe die Iban erneut ein")
+
+
+@login_required
+def checkiban_sender_api(request, iban):
+    user = request.user
+    account = BankAccount.objects.filter(iban=iban).first()
+    #print(user)
+    #print(account.user)
+    if account and user == account.user: #if account exist and user matches the account owner
+        example = {"answer": True}
+    else:
+        example = {"answer": False}
+    return HttpResponse(json.dumps(example))    #host replys with HttpResponse to the client/ Browser --> transaction.html, in terminal states 200 for ok
+
+
+@login_required
+def checkiban_receiver_api(request, iban):
+    user = request.user
+    account = BankAccount.objects.filter(iban=iban).first()
+    if account:
+        example = {"answer": True}
+    else:
+        example = {"answer": False}
+    return HttpResponse(json.dumps(example))   
+
+
+@login_required
+def checkamount_sender_api(request, amount, iban):
+    user = request.user
+    account = BankAccount.objects.filter(iban=iban).first()
+    if account and user == account.user: 
+        if float(amount) < account.balance:
+            example = {"answer": True}
+        else:
+            example = {"answer": False}
+    else:
+        example = {"answer": False}
+    return HttpResponse(json.dumps(example))    
